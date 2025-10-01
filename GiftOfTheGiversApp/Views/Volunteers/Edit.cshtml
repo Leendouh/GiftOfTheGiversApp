@@ -1,0 +1,77 @@
+﻿@model VolunteerViewModel
+@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Edit Volunteer Profile";
+
+    // Security check - though this is also handled in controller
+    var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    var isAdmin = User.IsInRole("Admin");
+}
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h2 class="mb-0">@ViewData["Title"]</h2>
+            </div>
+            <div class="card-body">
+                @if (!isAdmin)
+                {
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> You are editing your own volunteer profile.
+                    </div>
+                }
+
+                <form asp-action="Edit" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="All" class="alert alert-danger"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Skills" class="form-label fw-bold">Skills & Qualifications *</label>
+                        <textarea asp-for="Skills" class="form-control" rows="4" placeholder="List your skills, qualifications, or areas of expertise"></textarea>
+                        <span asp-validation-for="Skills" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="AvailabilityStatus" class="form-label fw-bold">Availability Status *</label>
+                        <select asp-for="AvailabilityStatus" class="form-select">
+                            <option value="Available">Available - Ready to help</option>
+                            <option value="Busy">Busy - Limited availability</option>
+                            <option value="Unavailable">Unavailable - Currently not available</option>
+                        </select>
+                        <span asp-validation-for="AvailabilityStatus" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Address" class="form-label fw-bold">Address</label>
+                        <input asp-for="Address" class="form-control" placeholder="Your current address" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="EmergencyContact" class="form-label fw-bold">Emergency Contact Number *</label>
+                        <input asp-for="EmergencyContact" class="form-control" placeholder="e.g., 0712345678" />
+                        <span asp-validation-for="EmergencyContact" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-warning me-2">
+                            <i class="bi bi-check-circle"></i> Update Profile
+                        </button>
+                        <a class="btn btn-secondary" asp-action="Details" asp-route-id="@ViewContext.RouteData.Values["id"]">
+                            <i class="bi bi-arrow-left"></i> Back to Details
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

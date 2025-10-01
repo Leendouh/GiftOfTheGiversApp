@@ -1,0 +1,168 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-speedometer2"></i> Admin Dashboard</h1>
+    <div>
+        <a class="btn btn-primary" asp-action="Users">
+            <i class="bi bi-people"></i> Manage Users
+        </a>
+        <a class="btn btn-secondary" asp-controller="Home" asp-action="Index">
+            <i class="bi bi-house"></i> Main Site
+        </a>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Total Users</h5>
+                        <h2 class="card-text">@ViewBag.TotalUsers</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-people display-6 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Volunteers</h5>
+                        <h2 class="card-text">@ViewBag.TotalVolunteers</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-person-check display-6 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Active Disasters</h5>
+                        <h2 class="card-text">@ViewBag.ActiveDisasters</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-exclamation-triangle display-6 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Total Disasters</h5>
+                        <h2 class="card-text">@ViewBag.TotalDisasters</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-clipboard-data display-6 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="bi bi-lightning"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a class="btn btn-outline-primary text-start" asp-action="Users">
+                        <i class="bi bi-people"></i> Manage Users & Roles
+                    </a>
+                    <a class="btn btn-outline-success text-start" asp-controller="Disasters" asp-action="Index">
+                        <i class="bi bi-exclamation-triangle"></i> View All Disasters
+                    </a>
+                    <a class="btn btn-outline-info text-start" asp-controller="Volunteers" asp-action="Index">
+                        <i class="bi bi-person-check"></i> Manage Volunteers
+                    </a>
+                    <button class="btn btn-outline-warning text-start">
+                        <i class="bi bi-graph-up"></i> View Reports
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="bi bi-clock"></i> Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item">
+                        <small class="text-muted">Just now</small>
+                        <p class="mb-1">You logged into the admin panel</p>
+                    </div>
+                    <div class="list-group-item">
+                        <small class="text-muted">Today</small>
+                        <p class="mb-1">System is running normally</p>
+                    </div>
+                    <div class="list-group-item">
+                        <small class="text-muted">Welcome</small>
+                        <p class="mb-1">Admin dashboard initialized</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- System Information -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> System Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">Application:</dt>
+                            <dd class="col-sm-8">Gift of the Givers Foundation</dd>
+
+                            <dt class="col-sm-4">Version:</dt>
+                            <dd class="col-sm-8">1.0.0</dd>
+
+                            <dt class="col-sm-4">Environment:</dt>
+                            <dd class="col-sm-8">Development</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">Database:</dt>
+                            <dd class="col-sm-8">Azure SQL</dd>
+
+                            <dt class="col-sm-4">Authentication:</dt>
+                            <dd class="col-sm-8">ASP.NET Core Identity</dd>
+
+                            <dt class="col-sm-4">Admin User:</dt>
+                            <dd class="col-sm-8">@User.Identity.Name</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

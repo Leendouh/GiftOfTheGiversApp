@@ -1,0 +1,274 @@
+﻿@model IEnumerable<Volunteer>
+@using GiftOfTheGiversApp.Extensions
+@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Volunteers";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Volunteers</h1>
+    <a class="btn btn-success" asp-action="Create">
+        <i class="bi bi-person-plus"></i> Register as Volunteer
+    </a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["InfoMessage"] != null)
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        @TempData["InfoMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        <h4>No volunteers registered yet</h4>
+        <p>Be the first to register as a volunteer and help make a difference.</p>
+        <a class="btn btn-success" asp-action="Create">Become First Volunteer</a>
+    </div>
+}
+else
+{
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Available</h5>
+                    <h2 class="card-text">@Model.Count(v => v.AvailabilityStatus == "Available")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Busy</h5>
+                    <h2 class="card-text">@Model.Count(v => v.AvailabilityStatus == "Busy")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-secondary">
+                <div class="card-body">
+                    <h5 class="card-title">Unavailable</h5>
+                    <h2 class="card-text">@Model.Count(v => v.AvailabilityStatus == "Unavailable")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Total Volunteers</h5>
+                    <h2 class="card-text">@Model.Count()</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Options -->
+    <div class="card mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Filter Volunteers</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Availability</label>
+                        <select class="form-select" id="availabilityFilter">
+                            <option value="all">All Statuses</option>
+                            <option value="Available">Available</option>
+                            <option value="Busy">Busy</option>
+                            <option value="Unavailable">Unavailable</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Skills</label>
+                        <input type="text" class="form-control" id="skillsFilter" placeholder="Search by skills...">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover" id="volunteersTable">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Skills</th>
+                    <th>Availability</th>
+                    <th>Emergency Contact</th>
+                    <th>Date Registered</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="volunteer-row" data-availability="@item.AvailabilityStatus" data-skills="@item.Skills.ToLower()">
+                        <td>
+                            <strong>@item.User?.FullName</strong>
+                            <br />
+                            <small class="text-muted">@item.User?.Email</small>
+                        </td>
+                        <td>
+                            <small>@item.User?.PhoneNumber</small>
+                            <br />
+                            <small class="text-muted">@item.Address</small>
+                        </td>
+                        <td>@item.Skills.Truncate(60)</td>
+                        <td>
+                            <span class="badge @GetAvailabilityBadge(item.AvailabilityStatus)">@item.AvailabilityStatus</span>
+                        </td>
+                        <td>@item.EmergencyContact</td>
+                        <td>@item.DateRegistered.ToString("MMM dd, yyyy")</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@item.Id" title="Details">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+
+                                @{
+                                    var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                                    var isOwner = item.UserId == currentUserId;
+                                    var isAdmin = User.IsInRole("Admin");
+                                    var canEdit = isOwner || isAdmin;
+                                }
+
+                                @if (canEdit)
+                                {
+                                    <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.Id" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                }
+
+                                <!-- Admin can view all, but only owners/admins can edit -->
+                                @if (isAdmin)
+                                {
+                                    <a class="btn btn-sm btn-primary" href="mailto:@item.User?.Email" title="Contact">
+                                        <i class="bi bi-envelope"></i>
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Summary Information -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Volunteer Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Recently Registered</h6>
+                            <ul class="list-unstyled">
+                                @foreach (var recent in Model.OrderByDescending(v => v.DateRegistered).Take(3))
+                                {
+                                    <li>
+                                        <small>
+                                            <span class="badge @GetAvailabilityBadge(recent.AvailabilityStatus)">@recent.AvailabilityStatus</span>
+                                            @recent.User?.FullName - @recent.DateRegistered.ToString("MMM dd")
+                                        </small>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Common Skills</h6>
+                            <div class="skill-tags">
+                                @{
+                                    var allSkills = Model.SelectMany(v => v.Skills.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                                    .Select(s => s.Trim())
+                                    .Where(s => !string.IsNullOrEmpty(s))
+                                    .GroupBy(s => s)
+                                    .OrderByDescending(g => g.Count())
+                                    .Take(8);
+                                }
+                                @foreach (var skill in allSkills)
+                                {
+                                    <span class="badge bg-light text-dark border me-1 mb-1">@skill.Key (@skill.Count())</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        // Filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const availabilityFilter = document.getElementById('availabilityFilter');
+            const skillsFilter = document.getElementById('skillsFilter');
+            const volunteerRows = document.querySelectorAll('.volunteer-row');
+
+            function filterVolunteers() {
+                const availabilityValue = availabilityFilter.value;
+                const skillsValue = skillsFilter.value.toLowerCase();
+
+                volunteerRows.forEach(row => {
+                    const rowAvailability = row.getAttribute('data-availability');
+                    const rowSkills = row.getAttribute('data-skills');
+
+                    const availabilityMatch = availabilityValue === 'all' || rowAvailability === availabilityValue;
+                    const skillsMatch = skillsValue === '' || rowSkills.includes(skillsValue);
+
+                    if (availabilityMatch && skillsMatch) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+            availabilityFilter.addEventListener('change', filterVolunteers);
+            skillsFilter.addEventListener('input', filterVolunteers);
+
+            // Auto-dismiss alerts after 5 seconds
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
+        });
+    </script>
+}
+
+@functions {
+    public string GetAvailabilityBadge(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "available" => "bg-success",
+            "busy" => "bg-warning",
+            "unavailable" => "bg-secondary",
+            _ => "bg-secondary"
+        };
+    }
+}

@@ -1,0 +1,70 @@
+﻿@model Disaster
+
+@{
+    ViewData["Title"] = "Delete Disaster Report";
+}
+
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h2 class="mb-0">@ViewData["Title"]</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <h5><i class="bi bi-exclamation-triangle"></i> Warning</h5>
+                    <p class="mb-0">You are about to permanently delete this disaster report. This action cannot be undone.</p>
+                </div>
+
+                <h5>Disaster Details</h5>
+                <dl class="row">
+                    <dt class="col-sm-4">Name:</dt>
+                    <dd class="col-sm-8">@Model.Name</dd>
+
+                    <dt class="col-sm-4">Location:</dt>
+                    <dd class="col-sm-8">@Model.Location</dd>
+
+                    <dt class="col-sm-4">Type:</dt>
+                    <dd class="col-sm-8">@Model.DisasterType</dd>
+
+                    <dt class="col-sm-4">Status:</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge @GetStatusBadge(Model.Status)">@Model.Status</span>
+                    </dd>
+
+                    <dt class="col-sm-4">Reported By:</dt>
+                    <dd class="col-sm-8">@Model.ReportedBy?.FullName</dd>
+
+                    <dt class="col-sm-4">Reported On:</dt>
+                    <dd class="col-sm-8">@Model.StartDate.ToString("MMM dd, yyyy")</dd>
+                </dl>
+
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-danger me-2">
+                            <i class="bi bi-trash"></i> Confirm Delete
+                        </button>
+                        <a class="btn btn-secondary" asp-action="Details" asp-route-id="@Model.Id">
+                            <i class="bi bi-arrow-left"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    public string GetStatusBadge(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "active" => "bg-danger",
+            "resolved" => "bg-success",
+            _ => "bg-secondary"
+        };
+    }
+}

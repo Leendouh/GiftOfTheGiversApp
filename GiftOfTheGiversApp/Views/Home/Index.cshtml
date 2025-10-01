@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Home - Gift of the Givers";
+}
+
+<div class="text-center mb-5">
+    <h1 class="display-4">Welcome to Gift of the Givers Foundation</h1>
+    <p class="lead">Disaster Relief Management System</p>
+</div>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <!-- DASHBOARD FOR LOGGED-IN USERS -->
+    <div class="row mb-5">
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Active Disasters</h5>
+                    <h2 class="card-text">@ViewBag.DisasterCount</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Registered Volunteers</h5>
+                    <h2 class="card-text">@ViewBag.VolunteerCount</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Active Missions</h5>
+                    <h2 class="card-text">@ViewBag.ActiveMissions</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Total Donations</h5>
+                    <h2 class="card-text">@ViewBag.TotalDonations</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-primary" asp-controller="Disasters" asp-action="Create">Report New Disaster</a>
+                        <a class="btn btn-success" asp-controller="Volunteers" asp-action="Create">Register as Volunteer</a>
+                        <a class="btn btn-info" asp-controller="Donations" asp-action="Create">Make a Donation</a>
+                        <a class="btn btn-warning" asp-controller="Missions" asp-action="Index">View Missions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>About Our Mission</h5>
+                </div>
+                <div class="card-body">
+                    <p>The Gift of the Givers Foundation is dedicated to providing swift and effective aid to communities affected by natural disasters and emergencies.</p>
+                    <p>Our platform helps coordinate volunteers, manage resources, and streamline disaster response efforts.</p>
+                    <p>Together, we can make a difference in the lives of those affected by adversity.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <!-- CONTENT FOR GUESTS/NOT LOGGED IN -->
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Join Our Relief Efforts</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3 border rounded">
+                                <h5>🚨 Report Disasters</h5>
+                                <p>Help us respond faster by reporting emergencies in your area</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3 border rounded">
+                                <h5>🤝 Volunteer</h5>
+                                <p>Join our team of dedicated volunteers making a difference</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3 border rounded">
+                                <h5>💰 Donate</h5>
+                                <p>Support our mission with much-needed resources and supplies</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <h5>Ready to make a difference?</h5>
+                        <p>Create an account to access all features and join our relief efforts</p>
+                        <div class="d-grid gap-2 d-md-block">
+                            <a class="btn btn-primary me-md-2" asp-area="Identity" asp-page="/Account/Register">Sign Up</a>
+                            <a class="btn btn-outline-primary" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

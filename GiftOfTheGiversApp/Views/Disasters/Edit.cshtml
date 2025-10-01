@@ -1,0 +1,112 @@
+﻿@model DisasterViewModel
+
+@{
+    ViewData["Title"] = "Edit Disaster Report";
+}
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h2 class="mb-0">@ViewData["Title"]</h2>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+
+                    <div asp-validation-summary="All" class="alert alert-danger"></div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Name" class="form-label fw-bold">Disaster Name *</label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Location" class="form-label fw-bold">Location *</label>
+                                <input asp-for="Location" class="form-control" />
+                                <span asp-validation-for="Location" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Description" class="form-label fw-bold">Description *</label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="DisasterType" class="form-label fw-bold">Disaster Type *</label>
+                                <select asp-for="DisasterType" class="form-select">
+                                    <option value="">Select Type</option>
+                                    <option value="Flood">Flood</option>
+                                    <option value="Earthquake">Earthquake</option>
+                                    <option value="Fire">Fire</option>
+                                    <option value="Storm">Storm</option>
+                                    <option value="Drought">Drought</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <span asp-validation-for="DisasterType" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="SeverityLevel" class="form-label fw-bold">Severity Level *</label>
+                                <select asp-for="SeverityLevel" class="form-select">
+                                    <option value="">Select Severity</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                                    <option value="Critical">Critical</option>
+                                </select>
+                                <span asp-validation-for="SeverityLevel" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Status" class="form-label fw-bold">Status</label>
+                                <select asp-for="Status" class="form-select">
+                                    <option value="Active">Active</option>
+                                    <option value="Resolved">Resolved</option>
+                                </select>
+                                <span asp-validation-for="Status" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="EstimatedAffected" class="form-label fw-bold">Estimated People Affected</label>
+                                <input asp-for="EstimatedAffected" class="form-control" type="number" min="0" />
+                                <span asp-validation-for="EstimatedAffected" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-warning me-2">
+                            <i class="bi bi-check-circle"></i> Update Disaster
+                        </button>
+                        <a class="btn btn-secondary" asp-action="Details" asp-route-id="@Model.Id">
+                            <i class="bi bi-arrow-left"></i> Back to Details
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
