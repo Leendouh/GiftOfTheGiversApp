@@ -1,0 +1,127 @@
+﻿@model IEnumerable<Disaster>
+@using GiftOfTheGiversApp.Extensions
+
+
+@{
+    ViewData["Title"] = "Disaster Reports";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Disaster Reports</h1>
+    <a class="btn btn-primary" asp-action="Create">
+        <i class="bi bi-plus-circle"></i> Report New Disaster
+    </a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        <h4>No disasters reported yet</h4>
+        <p>Be the first to report a disaster in your area.</p>
+        <a class="btn btn-primary" asp-action="Create">Report First Disaster</a>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Type</th>
+                    <th>Severity</th>
+                    <th>Status</th>
+                    <th>Start Date</th>
+                    <th>Affected</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <strong>@Html.DisplayFor(modelItem => item.Name)</strong>
+                            <br />
+                            <small class="text-muted">@item.Description.Truncate(50)</small>
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.Location)</td>
+                        <td>@Html.DisplayFor(modelItem => item.DisasterType)</td>
+                        <td>
+                            <span class="badge @GetSeverityBadge(item.SeverityLevel)">@item.SeverityLevel</span>
+                        </td>
+                        <td>
+                            <span class="badge @GetStatusBadge(item.Status)">@item.Status</span>
+                        </td>
+                        <td>@item.StartDate.ToString("MMM dd, yyyy")</td>
+                        <td>
+                            @if (item.EstimatedAffected.HasValue)
+                            {
+                                <span>@item.EstimatedAffected.Value.ToString("N0")</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Unknown</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@item.Id" title="Details">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.Id" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.Id" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@functions {
+    public string GetSeverityBadge(string severity)
+    {
+        return severity?.ToLower() switch
+        {
+            "low" => "bg-success",
+            "medium" => "bg-warning",
+            "high" => "bg-danger",
+            "critical" => "bg-dark",
+            _ => "bg-secondary"
+        };
+    }
+
+    public string GetStatusBadge(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "active" => "bg-danger",
+            "resolved" => "bg-success",
+            _ => "bg-secondary"
+        };
+    }
+}
+
+@section Scripts {
+    <script>
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function () {
+            $('.alert').alert('close');
+        }, 5000);
+    </script>
+}
