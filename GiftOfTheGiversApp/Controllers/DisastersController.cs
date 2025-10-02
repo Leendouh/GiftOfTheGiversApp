@@ -114,7 +114,7 @@ namespace GiftOfTheGiversApp.Controllers
             {
                 TempData["ErrorMessage"] = "You don't have permission to edit this disaster.";
                 return RedirectToAction(nameof(Details), new { id = disaster.Id });
-        }
+            }
 
             var viewModel = new DisasterViewModel
             {
@@ -227,8 +227,8 @@ namespace GiftOfTheGiversApp.Controllers
             if (disaster == null) return NotFound();
 
             var disasterName = disaster.Name;
-                _context.Disasters.Remove(disaster);
-                await _context.SaveChangesAsync();
+            _context.Disasters.Remove(disaster);
+            await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = $"Disaster '{disasterName}' has been permanently deleted.";
             return RedirectToAction(nameof(Index));

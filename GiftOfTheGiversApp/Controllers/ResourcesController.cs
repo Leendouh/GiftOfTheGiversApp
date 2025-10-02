@@ -185,9 +185,10 @@ namespace GiftOfTheGiversApp.Controllers
         // GET: Resources/LowStock
         public async Task<IActionResult> LowStock()
         {
+            // Use the condition directly instead of the computed property
             var lowStockResources = await _context.Resources
                 .Include(r => r.Category)
-                .Where(r => r.IsLowStock)
+                .Where(r => r.CurrentQuantity <= r.ThresholdQuantity) // Fixed this line
                 .OrderBy(r => r.CurrentQuantity)
                 .ToListAsync();
 

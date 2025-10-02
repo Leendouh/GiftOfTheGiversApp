@@ -1,0 +1,101 @@
+﻿@model GiftOfTheGiversApp.Models.ResourceRequest
+@{
+    ViewData["Title"] = "Edit Resource Request";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-pencil"></i> Edit Resource Request</h1>
+    <a class="btn btn-outline-secondary" asp-action="Index">
+        <i class="bi bi-arrow-left"></i> Back to Requests
+    </a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">Update Resource Request</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="DisasterId" class="form-label">Disaster *</label>
+                                <select asp-for="DisasterId" class="form-select">
+                                    <option value="">Select Disaster</option>
+                                    @foreach (var item in ViewBag.Disasters)
+                                    {
+                                        <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="DisasterId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="ResourceId" class="form-label">Resource Needed *</label>
+                                <select asp-for="ResourceId" class="form-select">
+                                    <option value="">Select Resource</option>
+                                    @foreach (var item in ViewBag.Resources)
+                                    {
+                                        <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="ResourceId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="QuantityRequested" class="form-label">Quantity Needed *</label>
+                                <input asp-for="QuantityRequested" class="form-control" min="1" />
+                                <span asp-validation-for="QuantityRequested" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="UrgencyLevel" class="form-label">Urgency Level *</label>
+                                <select asp-for="UrgencyLevel" class="form-select">
+                                    <option value="Low">Low</option>
+                                    <option value="Normal">Normal</option>
+                                    <option value="High">High</option>
+                                    <option value="Critical">Critical</option>
+                                </select>
+                                <span asp-validation-for="UrgencyLevel" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DateRequired" class="form-label">Date Required By (Optional)</label>
+                        <input asp-for="DateRequired" class="form-control" type="date" />
+                        <span asp-validation-for="DateRequired" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="bi bi-check-circle"></i> Update Request
+                        </button>
+                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-info">
+                            <i class="bi bi-eye"></i> View Details
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

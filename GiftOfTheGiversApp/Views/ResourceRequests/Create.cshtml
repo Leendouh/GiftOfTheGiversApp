@@ -1,0 +1,107 @@
+﻿@model GiftOfTheGiversApp.Models.ResourceRequestViewModel
+@{
+    ViewData["Title"] = "Create Resource Request";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="text-center mb-0"><i class="bi bi-plus-circle"></i> Create Resource Request</h2>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="DisasterId" class="form-label">Disaster *</label>
+                                <select asp-for="DisasterId" asp-items="Model.Disasters" class="form-select">
+                                    <option value="">Select Disaster</option>
+                                </select>
+                                <span asp-validation-for="DisasterId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="ResourceId" class="form-label">Resource Needed *</label>
+                                <select asp-for="ResourceId" asp-items="Model.Resources" class="form-select">
+                                    <option value="">Select Resource</option>
+                                </select>
+                                <span asp-validation-for="ResourceId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="QuantityRequested" class="form-label">Quantity Needed *</label>
+                                <input asp-for="QuantityRequested" class="form-control" min="1" />
+                                <span asp-validation-for="QuantityRequested" class="text-danger"></span>
+                                <small class="form-text text-muted">Enter the number of units needed</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="UrgencyLevel" class="form-label">Urgency Level *</label>
+                                <select asp-for="UrgencyLevel" class="form-select">
+                                    <option value="Low">Low</option>
+                                    <option value="Normal" selected>Normal</option>
+                                    <option value="High">High</option>
+                                    <option value="Critical">Critical</option>
+                                </select>
+                                <span asp-validation-for="UrgencyLevel" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DateRequired" class="form-label">Date Required By (Optional)</label>
+                        <input asp-for="DateRequired" class="form-control" type="date"
+                               min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        <span asp-validation-for="DateRequired" class="text-danger"></span>
+                        <small class="form-text text-muted">When do you need these resources by?</small>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Note:</strong> Fields marked with * are required.
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="bi bi-check-circle"></i> Submit Request
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to Requests
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Debug script to see what's happening
+        $(document).ready(function () {
+            console.log('Create page loaded');
+            console.log('Disasters count:', $('#DisasterId option').length - 1);
+            console.log('Resources count:', $('#ResourceId option').length - 1);
+
+            $('form').on('submit', function () {
+                console.log('Form submitted');
+                console.log('DisasterId:', $('#DisasterId').val());
+                console.log('ResourceId:', $('#ResourceId').val());
+                console.log('Quantity:', $('#QuantityRequested').val());
+                console.log('Urgency:', $('#UrgencyLevel').val());
+            });
+        });
+    </script>
+}

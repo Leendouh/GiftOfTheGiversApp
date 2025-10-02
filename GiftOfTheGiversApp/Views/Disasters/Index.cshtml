@@ -26,6 +26,8 @@
 @using GiftOfTheGiversApp.Extensions
 @using System.Security.Claims
 
+@{
+    ViewData["Title"] = "Disaster Reports";
 
     // Get role-based flags from ViewData
     bool canEdit = ViewData["canEdit"] as bool? ?? false;
@@ -205,9 +207,9 @@ else
 
                                 @if (canEdit)
                                 {
-                                <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.Id" title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
+                                    <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.Id" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
                                 }
 
                                 @if (canResolve && item.Status == "Active")
@@ -220,8 +222,8 @@ else
                                 @if (isAdmin)
                                 {
                                     <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.Id" title="Delete (Admin Only)">
-                                    <i class="bi bi-trash"></i>
-                                </a>
+                                        <i class="bi bi-trash"></i>
+                                    </a>
                                 }
                             </div>
                         </td>
@@ -269,6 +271,7 @@ else
         </div>
     </div>
 }
+
 @section Scripts {
     <script>
         // Filter functionality
