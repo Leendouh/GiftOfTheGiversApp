@@ -1,11 +1,38 @@
-﻿@model IEnumerable<Disaster>
+﻿@functions {
+    public string GetSeverityBadge(string severity)
+    {
+        return severity?.ToLower() switch
+        {
+            "low" => "bg-success",
+            "medium" => "bg-warning",
+            "high" => "bg-danger",
+            "critical" => "bg-dark",
+            _ => "bg-secondary"
+        };
+    }
+
+    public string GetStatusBadge(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "active" => "bg-danger",
+            "resolved" => "bg-success",
+            _ => "bg-secondary"
+        };
+    }
+}
+
+@model IEnumerable<Disaster>
 @using GiftOfTheGiversApp.Extensions
 @using System.Security.Claims
 
 @{
     ViewData["Title"] = "Disaster Reports";
 
-
+    // Get role-based flags from ViewData
+    bool canEdit = ViewData["canEdit"] as bool? ?? false;
+    bool canResolve = ViewData["canResolve"] as bool? ?? false;
+    bool isAdmin = ViewData["isAdmin"] as bool? ?? false;
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -178,15 +205,6 @@ else
                                     <i class="bi bi-eye"></i>
                                 </a>
 
-                                @{
-                                    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                                    var isOwner = item.ReportedById == currentUserId;
-                                    var isAdmin = User.IsInRole("Admin");
-                                    var isCoordinator = User.IsInRole("Coordinator");
-                                    var canEdit = isOwner || isAdmin;
-                                    var canResolve = isOwner || isAdmin || isCoordinator;
-                                }
-
                                 @if (canEdit)
                                 {
                                     <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.Id" title="Edit">
@@ -253,7 +271,6 @@ else
         </div>
     </div>
 }
-
 @section Scripts {
     <script>
         // Filter functionality
@@ -305,29 +322,10 @@ else
                 window.location.href = `/Disasters/Resolve/${disasterId}`;
             }
         }
+
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function () {
+            $('.alert').alert('close');
+        }, 5000);
     </script>
-}
-
-@functions {
-    public string GetSeverityBadge(string severity)
-    {
-        return severity?.ToLower() switch
-        {
-            "low" => "bg-success",
-            "medium" => "bg-warning",
-            "high" => "bg-danger",
-            "critical" => "bg-dark",
-            _ => "bg-secondary"
-        };
-    }
-
-    public string GetStatusBadge(string status)
-    {
-        return status?.ToLower() switch
-        {
-            "active" => "bg-danger",
-            "resolved" => "bg-success",
-            _ => "bg-secondary"
-        };
-    }
 }

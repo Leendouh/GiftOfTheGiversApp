@@ -1,0 +1,114 @@
+﻿@model GiftOfTheGiversApp.Models.Donation
+@{
+    ViewData["Title"] = "Donation Details";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-eye"></i> Donation Details</h1>
+    <div>
+        <a class="btn btn-outline-secondary" asp-action="Donations">
+            <i class="bi bi-arrow-left"></i> Back to My Donations
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Donation Information</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Donor Name:</dt>
+                    <dd class="col-sm-8">@Model.Donor?.FullName</dd>
+
+                    <dt class="col-sm-4">Donor Email:</dt>
+                    <dd class="col-sm-8">@Model.Donor?.Email</dd>
+
+                    <dt class="col-sm-4">Resource:</dt>
+                    <dd class="col-sm-8">
+                        <strong>@Model.Resource?.Name</strong>
+                        <br />
+                        <small class="text-muted">@Model.Resource?.Description</small>
+                    </dd>
+
+                    <dt class="col-sm-4">Category:</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge bg-info">@Model.Resource?.Category?.CategoryName</span>
+                    </dd>
+
+                    <dt class="col-sm-4">Quantity Donated:</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge bg-success">@Model.Quantity</span>
+                    </dd>
+
+                    <dt class="col-sm-4">Donation Date:</dt>
+                    <dd class="col-sm-8">@Model.DonationDate.ToString("MMMM dd, yyyy 'at' hh:mm tt")</dd>
+
+                    <dt class="col-sm-4">Status:</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge @GetStatusBadge(Model.Status)">@Model.Status</span>
+                    </dd>
+
+                    @if (!string.IsNullOrEmpty(Model.Notes))
+                    {
+                        <dt class="col-sm-4">Notes:</dt>
+                        <dd class="col-sm-8">@Model.Notes</dd>
+                    }
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Resource Information</h5>
+            </div>
+            <div class="card-body">
+                <h6>@Model.Resource?.Name</h6>
+                <p class="text-muted">@Model.Resource?.Description</p>
+                <hr>
+                <small class="text-muted">
+                    <strong>Category:</strong> @Model.Resource?.Category?.CategoryName<br>
+                    <strong>Unit:</strong> @Model.Resource?.UnitOfMeasure<br>
+                    <strong>Current Stock:</strong> @Model.Resource?.CurrentQuantity<br>
+                    <strong>Low Stock Alert:</strong> @Model.Resource?.ThresholdQuantity
+                </small>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        @if (User.IsInRole("Admin") || User.IsInRole("Coordinator"))
+        {
+            <div class="card mt-3">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0">Admin Actions</h6>
+                </div>
+                <div class="card-body">
+                    <form asp-action="UpdateStatus" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <div class="btn-group w-100">
+                            <button type="submit" name="status" value="Received" class="btn btn-sm btn-success">Mark Received</button>
+                            <button type="submit" name="status" value="Distributed" class="btn btn-sm btn-info">Mark Distributed</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@functions {
+    public string GetStatusBadge(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "pending" => "bg-warning",
+            "received" => "bg-info",
+            "distributed" => "bg-success",
+            _ => "bg-secondary"
+        };
+    }
+}

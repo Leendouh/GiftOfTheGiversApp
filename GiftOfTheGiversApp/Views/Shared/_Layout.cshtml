@@ -35,6 +35,15 @@
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-area="" asp-controller="Missions" asp-action="Index">Missions</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Resources" asp-action="Index">Resources</a>
+                            </li>
+                            @if (User.IsInRole("Admin") || User.IsInRole("Coordinator"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-light" asp-controller="ResourceRequests" asp-action="Index">Resource Requests</a>
+                                </li>
+                            }
                             <!-- ADMIN LINKS - ONLY SHOW TO ADMINS -->
                             @if (User.IsInRole("Admin"))
                             {
@@ -63,6 +72,7 @@
                                 </li>
                             }
                         }
+                        
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

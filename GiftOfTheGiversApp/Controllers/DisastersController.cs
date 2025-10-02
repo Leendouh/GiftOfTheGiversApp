@@ -26,6 +26,21 @@ namespace GiftOfTheGiversApp.Controllers
                 .Include(d => d.ReportedBy)
                 .OrderByDescending(d => d.StartDate)
                 .ToListAsync();
+
+            // Get the current user
+            var user = User;
+
+            // Define flags for permissions based on roles
+            bool canEdit = user.IsInRole("Editor") || user.IsInRole("Admin");
+            bool canResolve = user.IsInRole("Admin") || user.IsInRole("DisasterCoordinator");
+            bool isAdmin = user.IsInRole("Admin");
+
+            // Pass the flags to the view using ViewData
+            ViewData["canEdit"] = canEdit;
+            ViewData["canResolve"] = canResolve;
+            ViewData["isAdmin"] = isAdmin;
+
+            // Return the disasters list along with the permissions
             return View(disasters);
         }
 
@@ -99,7 +114,7 @@ namespace GiftOfTheGiversApp.Controllers
             {
                 TempData["ErrorMessage"] = "You don't have permission to edit this disaster.";
                 return RedirectToAction(nameof(Details), new { id = disaster.Id });
-            }
+        }
 
             var viewModel = new DisasterViewModel
             {
@@ -212,8 +227,8 @@ namespace GiftOfTheGiversApp.Controllers
             if (disaster == null) return NotFound();
 
             var disasterName = disaster.Name;
-            _context.Disasters.Remove(disaster);
-            await _context.SaveChangesAsync();
+                _context.Disasters.Remove(disaster);
+                await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = $"Disaster '{disasterName}' has been permanently deleted.";
             return RedirectToAction(nameof(Index));

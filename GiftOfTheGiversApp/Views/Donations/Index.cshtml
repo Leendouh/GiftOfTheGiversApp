@@ -1,0 +1,102 @@
+﻿@model IEnumerable<GiftOfTheGiversApp.Models.Donation>
+@{
+    ViewData["Title"] = "All Donations";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-heart"></i> All Donations</h1>
+    <div>
+        <a class="btn btn-primary" asp-action="Create">
+            <i class="bi bi-plus-circle"></i> Make Donation
+        </a>
+        <a class="btn btn-outline-secondary" asp-action="Donations">
+            <i class="bi bi-person"></i> My Donations
+        </a>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="bi bi-list-check"></i> Donation History</h5>
+    </div>
+    <div class="card-body">
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info">
+                <h5>No donations found</h5>
+                <p>There are no donations in the system yet.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Donor</th>
+                            <th>Resource</th>
+                            <th>Quantity</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var donation in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@donation.Donor?.FullName</strong>
+                                    <br />
+                                    <small class="text-muted">@donation.Donor?.Email</small>
+                                </td>
+                                <td>@donation.Resource?.Name</td>
+                                <td>
+                                    <span class="badge bg-primary">@donation.Quantity</span>
+                                </td>
+                                <td>@donation.DonationDate.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    <span class="badge @GetStatusBadge(donation.Status)">@donation.Status</span>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@donation.Id">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        @if (User.IsInRole("Admin") || User.IsInRole("Coordinator"))
+                                        {
+                                            <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@donation.Id">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@functions {
+    public string GetStatusBadge(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "pending" => "bg-warning",
+            "received" => "bg-info",
+            "distributed" => "bg-success",
+            _ => "bg-secondary"
+        };
+    }
+}

@@ -1,0 +1,62 @@
+﻿@model GiftOfTheGiversApp.Models.DonationCreateViewModel
+@{
+    ViewData["Title"] = "Make Donation";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="text-center mb-0"><i class="bi bi-heart"></i> Make a Donation</h2>
+            </div>
+            <div class="card-body">
+                <p class="text-muted text-center">Your donation can make a difference in someone's life. Thank you for your generosity!</p>
+
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="ResourceId" class="form-label">What would you like to donate?</label>
+                                <select asp-for="ResourceId" asp-items="Model.Resources" class="form-select" required>
+                                    <option value="">Select Resource</option>
+                                </select>
+                                <span asp-validation-for="ResourceId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="Quantity" class="form-label">Quantity</label>
+                                <input asp-for="Quantity" class="form-control" min="1" required />
+                                <span asp-validation-for="Quantity" class="text-danger"></span>
+                                <small class="form-text text-muted">Please enter the quantity you wish to donate.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Notes" class="form-label">Additional Notes (Optional)</label>
+                        <textarea asp-for="Notes" class="form-control" rows="3" placeholder="Any special instructions or details about your donation..."></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="bi bi-check-circle"></i> Submit Donation
+                        </button>
+                        <a asp-action="Donations" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to My Donations
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

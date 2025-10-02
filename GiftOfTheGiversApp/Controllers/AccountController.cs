@@ -66,6 +66,7 @@ namespace GiftOfTheGiversApp.Controllers
             return View();
         }
 
+        // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -77,13 +78,6 @@ namespace GiftOfTheGiversApp.Controllers
 
                 if (result.Succeeded)
                 {
-                    // Check if user is admin and redirect accordingly
-                    var user = await _userManager.FindByEmailAsync(model.Email);
-                    if (user != null && await _userManager.IsInRoleAsync(user, "Admin"))
-                    {
-                        return RedirectToAction("Dashboard", "Admin");
-                    }
-
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -92,6 +86,7 @@ namespace GiftOfTheGiversApp.Controllers
 
             return View(model);
         }
+
         // POST: /Account/Logout
         [HttpPost]
         [ValidateAntiForgeryToken]

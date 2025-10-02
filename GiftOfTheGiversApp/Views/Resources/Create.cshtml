@@ -1,0 +1,98 @@
+﻿@model GiftOfTheGiversApp.Models.ResourceViewModel
+@{
+    ViewData["Title"] = "Add Resource";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="text-center mb-0"><i class="bi bi-plus-circle"></i> Add New Resource</h2>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="Name" class="form-label">Resource Name</label>
+                                <input asp-for="Name" class="form-control" placeholder="e.g., Canned Food" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="CategoryId" class="form-label">Category</label>
+                                <select asp-for="CategoryId" asp-items="Model.Categories" class="form-select">
+                                    <option value="">Select Category</option>
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="3" placeholder="Describe the resource..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label asp-for="UnitOfMeasure" class="form-label">Unit of Measure</label>
+                                <input asp-for="UnitOfMeasure" class="form-control" placeholder="e.g., cans, pieces, kg" />
+                                <span asp-validation-for="UnitOfMeasure" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label asp-for="CurrentQuantity" class="form-label">Current Quantity</label>
+                                <input asp-for="CurrentQuantity" class="form-control" min="0" />
+                                <span asp-validation-for="CurrentQuantity" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label asp-for="ThresholdQuantity" class="form-label">Low Stock Alert</label>
+                                <input asp-for="ThresholdQuantity" class="form-control" min="1" />
+                                <span asp-validation-for="ThresholdQuantity" class="text-danger"></span>
+                                <small class="form-text text-muted">Alert when stock reaches this level</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="bi bi-check-circle"></i> Add Resource
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to Inventory
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Client-side validation feedback
+        $(document).ready(function () {
+            $('form').on('submit', function () {
+                console.log('Form submitted - checking validation');
+
+                // Log each field value
+                $('input, select, textarea').each(function () {
+                    console.log($(this).attr('name') + ': ' + $(this).val());
+                });
+            });
+        });
+    </script>
+}
