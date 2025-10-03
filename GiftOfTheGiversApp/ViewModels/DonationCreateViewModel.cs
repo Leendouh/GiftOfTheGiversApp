@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace GiftOfTheGiversApp.Models
+namespace GiftOfTheGiversApp.ViewModels
 {
     public class DonationCreateViewModel
     {

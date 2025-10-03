@@ -19,16 +19,54 @@ namespace GiftOfTheGiversApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // Get counts for dashboard
-            var disasterCount = await _context.Disasters.CountAsync();
-            var volunteerCount = await _context.Volunteers.CountAsync();
-            var activeMissions = await _context.Missions.CountAsync(m => m.Status == "Open" || m.Status == "In Progress");
-            var totalDonations = await _context.Donations.SumAsync(d => d.Quantity);
+            if (User.Identity.IsAuthenticated)
+            {
+                // Get counts for dashboard
+                var disasterCount = await _context.Disasters
+                    .Where(d => d.Status == "Active")
+                    .CountAsync();
 
-            ViewBag.DisasterCount = disasterCount;
-            ViewBag.VolunteerCount = volunteerCount;
-            ViewBag.ActiveMissions = activeMissions;
-            ViewBag.TotalDonations = totalDonations;
+                var volunteerCount = await _context.Volunteers.CountAsync();
+
+                var activeMissions = await _context.Missions
+                    .Where(m => m.Status == "Open" || m.Status == "In Progress")
+                    .CountAsync();
+
+                var activeAssignments = await _context.Assignments
+                    .Where(a => a.Status == "Assigned")
+                    .CountAsync();
+
+                // Recent missions for activity feed
+                var recentMissions = await _context.Missions
+                    .Include(m => m.Disaster)
+                    .OrderByDescending(m => m.CreatedDate)
+                    .Take(5)
+                    .Select(m => new
+                    {
+                        m.Title,
+                        m.Status,
+                        DisasterName = m.Disaster.Name
+                    })
+                    .ToListAsync();
+
+                ViewBag.DisasterCount = disasterCount;
+                ViewBag.VolunteerCount = volunteerCount;
+                ViewBag.ActiveMissions = activeMissions;
+                ViewBag.ActiveAssignments = activeAssignments;
+                ViewBag.RecentMissions = recentMissions;
+            }
+            else
+            {
+                // For non-authenticated users, show public statistics
+                var publicDisasterCount = await _context.Disasters
+                    .Where(d => d.Status == "Active")
+                    .CountAsync();
+
+                var publicVolunteerCount = await _context.Volunteers.CountAsync();
+
+                ViewBag.PublicDisasterCount = publicDisasterCount;
+                ViewBag.PublicVolunteerCount = publicVolunteerCount;
+            }
 
             return View();
         }

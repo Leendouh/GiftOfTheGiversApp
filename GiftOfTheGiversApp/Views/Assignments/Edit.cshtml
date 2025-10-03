@@ -1,0 +1,110 @@
+﻿@model GiftOfTheGiversApp.ViewModels.AssignmentViewModel
+
+@{
+    ViewData["Title"] = "Edit Assignment";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-pencil"></i> Edit Assignment</h1>
+    <div>
+        <a class="btn btn-outline-secondary" asp-action="Index">
+            <i class="bi bi-arrow-left"></i> Back to Assignments
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">Update Assignment Details</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit">
+                    <input type="hidden" asp-for="Id" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="VolunteerId" class="form-label">Volunteer *</label>
+                                <select asp-for="VolunteerId" asp-items="Model.Volunteers" class="form-select">
+                                    <option value="">Select Volunteer</option>
+                                </select>
+                                <span asp-validation-for="VolunteerId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="DisasterId" class="form-label">Disaster *</label>
+                                <select asp-for="DisasterId" asp-items="Model.Disasters" class="form-select">
+                                    <option value="">Select Disaster</option>
+                                </select>
+                                <span asp-validation-for="DisasterId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="RoleInAssignment" class="form-label">Role *</label>
+                                <select asp-for="RoleInAssignment" asp-items="Model.Roles" class="form-select">
+                                    <option value="">Select Role</option>
+                                </select>
+                                <span asp-validation-for="RoleInAssignment" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Status" class="form-label">Status *</label>
+                                <select asp-for="Status" class="form-select">
+                                    <option value="Assigned">Assigned</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </select>
+                                <span asp-validation-for="Status" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-warning me-2">
+                            <i class="bi bi-check-circle"></i> Update Assignment
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0"><i class="bi bi-info-circle"></i> Assignment Status</h6>
+            </div>
+            <div class="card-body">
+                <p class="small">
+                    <strong>Assignment Status Guide:</strong>
+                </p>
+                <ul class="small">
+                    <li><span class="badge bg-primary">Assigned</span> - Volunteer is actively assigned</li>
+                    <li><span class="badge bg-success">Completed</span> - Assignment is finished</li>
+                    <li><span class="badge bg-danger">Cancelled</span> - Assignment was cancelled</li>
+                </ul>
+                <p class="small mt-3">
+                    <strong>Note:</strong> Changing status to "Completed" or "Cancelled" will make the volunteer available for new assignments.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

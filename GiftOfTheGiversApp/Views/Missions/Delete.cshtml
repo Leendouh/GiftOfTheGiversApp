@@ -1,0 +1,102 @@
+﻿@model GiftOfTheGiversApp.Models.Mission
+@{
+    ViewData["Title"] = "Delete Mission";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-trash"></i> Delete Mission</h1>
+    <div>
+        <a class="btn btn-outline-secondary" asp-action="Index">
+            <i class="bi bi-arrow-left"></i> Back to Missions
+        </a>
+    </div>
+</div>
+
+<div class="alert alert-danger">
+    <h4 class="alert-heading">Warning!</h4>
+    <p>Are you sure you want to delete this mission? This action cannot be undone.</p>
+</div>
+
+<div class="card">
+    <div class="card-header bg-danger text-white">
+        <h5 class="mb-0">Mission Details</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <dl>
+                    <dt>Title:</dt>
+                    <dd>@Model.Title</dd>
+
+                    <dt>Disaster:</dt>
+                    <dd>@Model.Disaster?.Name</dd>
+
+                    <dt>Status:</dt>
+                    <dd><span class="badge @GetStatusBadge(Model.Status)">@Model.Status</span></dd>
+
+                    <dt>Priority:</dt>
+                    <dd><span class="badge @GetPriorityBadge(Model.Priority)">@Model.Priority</span></dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl>
+                    <dt>Assigned To:</dt>
+                    <dd>@(Model.AssignedTo?.User?.FullName ?? "Not assigned")</dd>
+
+                    <dt>Created Date:</dt>
+                    <dd>@Model.CreatedDate.ToString("MMM dd, yyyy")</dd>
+
+                    <dt>Created By:</dt>
+                    <dd>@Model.CreatedBy?.FullName</dd>
+
+                    @if (Model.DueDate.HasValue)
+                    {
+                        <dt>Due Date:</dt>
+                        <dd>@Model.DueDate.Value.ToString("MMM dd, yyyy")</dd>
+                    }
+                </dl>
+            </div>
+        </div>
+
+        <div class="form-group mt-4">
+            <dt>Description:</dt>
+            <dd>@Model.Description</dd>
+        </div>
+
+        <form asp-action="Delete" class="mt-4">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger me-2">
+                <i class="bi bi-trash"></i> Confirm Delete
+            </button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
+                <i class="bi bi-x-circle"></i> Cancel
+            </a>
+        </form>
+    </div>
+</div>
+
+@functions {
+    public string GetStatusBadge(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "open" => "bg-primary",
+            "in progress" => "bg-warning",
+            "completed" => "bg-success",
+            "cancelled" => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+
+    public string GetPriorityBadge(string priority)
+    {
+        return priority?.ToLower() switch
+        {
+            "low" => "bg-success",
+            "medium" => "bg-info",
+            "high" => "bg-warning",
+            "critical" => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+}

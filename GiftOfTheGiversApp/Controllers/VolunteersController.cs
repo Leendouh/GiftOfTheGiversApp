@@ -1,5 +1,6 @@
 ﻿using GiftOfTheGiversApp.Data;
 using GiftOfTheGiversApp.Models;
+using GiftOfTheGiversApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -104,12 +105,17 @@ namespace GiftOfTheGiversApp.Controllers
         {
             if (id == null) return NotFound();
 
-            var volunteer = await _context.Volunteers.FindAsync(id);
+            var volunteer = await _context.Volunteers
+                .Include(v => v.User) // Include user to verify ownership
+                .FirstOrDefaultAsync(v => v.Id == id);
+
             if (volunteer == null) return NotFound();
 
-            // Check if user owns this volunteer profile
+            // Check if user owns this volunteer profile OR is Admin
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (volunteer.UserId != currentUserId)
+            var isAdmin = User.IsInRole("Admin");
+
+            if (volunteer.UserId != currentUserId && !isAdmin)
             {
                 TempData["ErrorMessage"] = "You can only edit your own volunteer profile.";
                 return RedirectToAction(nameof(Index));
@@ -117,6 +123,7 @@ namespace GiftOfTheGiversApp.Controllers
 
             var viewModel = new VolunteerViewModel
             {
+                Id = volunteer.Id,
                 Skills = volunteer.Skills,
                 AvailabilityStatus = volunteer.AvailabilityStatus,
                 Address = volunteer.Address,

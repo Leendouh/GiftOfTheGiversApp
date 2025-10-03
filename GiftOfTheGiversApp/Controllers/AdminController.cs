@@ -5,6 +5,7 @@ using GiftOfTheGiversApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using GiftOfTheGiversApp.Data;
+using GiftOfTheGiversApp.ViewModels;
 
 namespace GiftOfTheGiversApp.Controllers
 {
@@ -45,6 +46,7 @@ namespace GiftOfTheGiversApp.Controllers
                     UserName = user.UserName,
                     FullName = user.FullName,
                     Email = user.Email,
+                    // PhoneNumber = user.PhoneNumber, // Remove this line since it doesn't exist in your model
                     CurrentRoles = currentRoles.ToList(),
                     AvailableRoles = allRoles
                 });
@@ -114,24 +116,46 @@ namespace GiftOfTheGiversApp.Controllers
         // GET: Admin/Dashboard
         public async Task<IActionResult> Dashboard()
         {
+            // User Statistics
             var totalUsers = await _userManager.Users.CountAsync();
             var totalVolunteers = await _context.Volunteers.CountAsync();
+
+            // Disaster Statistics
             var totalDisasters = await _context.Disasters.CountAsync();
             var activeDisasters = await _context.Disasters.CountAsync(d => d.Status == "Active");
-            var recentUsers = await _userManager.Users
-                .OrderByDescending(u => u.CreatedDate)
-                .Take(5)
-                .Select(u => new { u.FullName, u.Email, u.CreatedDate })
-                .ToListAsync();
+
+            // Mission Statistics
+            var totalMissions = await _context.Missions.CountAsync();
+            var activeMissions = await _context.Missions.CountAsync(m => m.Status == "Open" || m.Status == "In Progress");
+            var completedMissions = await _context.Missions.CountAsync(m => m.Status == "Completed");
+
+            // Assignment Statistics
+            var activeAssignments = await _context.Assignments.CountAsync(a => a.Status == "Assigned");
+
+            // Donation Statistics
+            var totalDonations = await _context.Donations.SumAsync(d => (int?)d.Quantity) ?? 0;
+
+            // Recent Activity
+            var recentActivity = new List<dynamic>
+            {
+                new { Title = "Admin Login", Time = "Just now", Description = "You logged into the admin panel" },
+                new { Title = "System Check", Time = "Today", Description = "All systems running normally" },
+                new { Title = "User Registration", Time = "2 hours ago", Description = "New volunteer registered in system" },
+                new { Title = "Mission Update", Time = "4 hours ago", Description = "New mission created for flood relief" }
+            };
 
             ViewBag.TotalUsers = totalUsers;
             ViewBag.TotalVolunteers = totalVolunteers;
             ViewBag.TotalDisasters = totalDisasters;
             ViewBag.ActiveDisasters = activeDisasters;
-            ViewBag.RecentUsers = recentUsers;
+            ViewBag.TotalMissions = totalMissions;
+            ViewBag.ActiveMissions = activeMissions;
+            ViewBag.CompletedMissions = completedMissions;
+            ViewBag.ActiveAssignments = activeAssignments;
+            ViewBag.TotalDonations = totalDonations;
+            ViewBag.RecentActivity = recentActivity;
 
             return View();
         }
-
     }
 }

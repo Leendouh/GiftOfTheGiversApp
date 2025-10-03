@@ -5,6 +5,7 @@ using GiftOfTheGiversApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using GiftOfTheGiversApp.ViewModels;
 
 namespace GiftOfTheGiversApp.Controllers
 {

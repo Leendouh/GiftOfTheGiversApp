@@ -1,4 +1,4 @@
-﻿@model VolunteerViewModel
+﻿@model GiftOfTheGiversApp.ViewModels.VolunteerViewModel
 @using System.Security.Claims
 
 @{
@@ -7,6 +7,9 @@
     // Security check - though this is also handled in controller
     var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     var isAdmin = User.IsInRole("Admin");
+
+    // Get the volunteer ID from route data
+    var volunteerId = ViewContext.RouteData.Values["id"]?.ToString();
 }
 
 <div class="row">
@@ -25,6 +28,9 @@
 
                 <form asp-action="Edit" method="post">
                     @Html.AntiForgeryToken()
+
+                    <!-- ADD THIS HIDDEN FIELD FOR THE ID -->
+                    <input type="hidden" asp-for="Id" value="@volunteerId" />
 
                     <div asp-validation-summary="All" class="alert alert-danger"></div>
 
@@ -60,7 +66,7 @@
                         <button type="submit" class="btn btn-warning me-2">
                             <i class="bi bi-check-circle"></i> Update Profile
                         </button>
-                        <a class="btn btn-secondary" asp-action="Details" asp-route-id="@ViewContext.RouteData.Values["id"]">
+                        <a class="btn btn-secondary" asp-action="Details" asp-route-id="@volunteerId">
                             <i class="bi bi-arrow-left"></i> Back to Details
                         </a>
                     </div>

@@ -3,74 +3,83 @@
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1><i class="bi bi-speedometer2"></i> Admin Dashboard</h1>
+    <div>
+        <h1 class="h2 fw-bold text-primary">
+            <i class="bi bi-speedometer2 me-2"></i>Admin Dashboard
+        </h1>
+        <p class="text-muted mb-0">Comprehensive overview of system operations and statistics</p>
+    </div>
     <div>
         <a class="btn btn-primary" asp-action="Users">
-            <i class="bi bi-people"></i> Manage Users
+            <i class="bi bi-people me-2"></i>Manage Users
         </a>
-        <a class="btn btn-secondary" asp-controller="Home" asp-action="Index">
-            <i class="bi bi-house"></i> Main Site
+        <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">
+            <i class="bi bi-house me-2"></i>Main Site
         </a>
     </div>
 </div>
 
 <!-- Statistics Cards -->
-<div class="row mb-4">
-    <div class="col-md-3">
-        <div class="card text-white bg-primary">
+<div class="row mb-5">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start-4 border-start-primary shadow-sm h-100">
             <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h5 class="card-title">Total Users</h5>
-                        <h2 class="card-text">@ViewBag.TotalUsers</h2>
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-primary text-uppercase mb-1">Total Users</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">@ViewBag.TotalUsers</div>
+                        <small class="text-muted">Registered accounts</small>
                     </div>
-                    <div class="align-self-center">
-                        <i class="bi bi-people display-6 opacity-50"></i>
+                    <div class="col-auto">
+                        <i class="bi bi-people fs-1 text-primary opacity-50"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-success">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start-4 border-start-success shadow-sm h-100">
             <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h5 class="card-title">Volunteers</h5>
-                        <h2 class="card-text">@ViewBag.TotalVolunteers</h2>
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-success text-uppercase mb-1">Active Volunteers</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">@ViewBag.TotalVolunteers</div>
+                        <small class="text-muted">Ready to help</small>
                     </div>
-                    <div class="align-self-center">
-                        <i class="bi bi-person-check display-6 opacity-50"></i>
+                    <div class="col-auto">
+                        <i class="bi bi-person-check fs-1 text-success opacity-50"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-warning">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start-4 border-start-warning shadow-sm h-100">
             <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h5 class="card-title">Active Disasters</h5>
-                        <h2 class="card-text">@ViewBag.ActiveDisasters</h2>
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-warning text-uppercase mb-1">Active Disasters</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">@ViewBag.ActiveDisasters</div>
+                        <small class="text-muted">Requiring response</small>
                     </div>
-                    <div class="align-self-center">
-                        <i class="bi bi-exclamation-triangle display-6 opacity-50"></i>
+                    <div class="col-auto">
+                        <i class="bi bi-exclamation-triangle fs-1 text-warning opacity-50"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-info">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start-4 border-start-info shadow-sm h-100">
             <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h5 class="card-title">Total Disasters</h5>
-                        <h2 class="card-text">@ViewBag.TotalDisasters</h2>
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-info text-uppercase mb-1">Total Missions</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">@ViewBag.TotalMissions</div>
+                        <small class="text-muted">Relief operations</small>
                     </div>
-                    <div class="align-self-center">
-                        <i class="bi bi-clipboard-data display-6 opacity-50"></i>
+                    <div class="col-auto">
+                        <i class="bi bi-compass fs-1 text-info opacity-50"></i>
                     </div>
                 </div>
             </div>
@@ -78,50 +87,151 @@
     </div>
 </div>
 
-<!-- Quick Actions -->
-<div class="row">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-dark text-white">
-                <h5 class="mb-0"><i class="bi bi-lightning"></i> Quick Actions</h5>
-            </div>
+<!-- Second Row Statistics -->
+<div class="row mb-5">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start-4 border-start-danger shadow-sm h-100">
             <div class="card-body">
-                <div class="d-grid gap-2">
-                    <a class="btn btn-outline-primary text-start" asp-action="Users">
-                        <i class="bi bi-people"></i> Manage Users & Roles
-                    </a>
-                    <a class="btn btn-outline-success text-start" asp-controller="Disasters" asp-action="Index">
-                        <i class="bi bi-exclamation-triangle"></i> View All Disasters
-                    </a>
-                    <a class="btn btn-outline-info text-start" asp-controller="Volunteers" asp-action="Index">
-                        <i class="bi bi-person-check"></i> Manage Volunteers
-                    </a>
-                    <button class="btn btn-outline-warning text-start">
-                        <i class="bi bi-graph-up"></i> View Reports
-                    </button>
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-danger text-uppercase mb-1">Active Assignments</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">@ViewBag.ActiveAssignments</div>
+                        <small class="text-muted">Volunteers deployed</small>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-list-task fs-1 text-danger opacity-50"></i>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-dark text-white">
-                <h5 class="mb-0"><i class="bi bi-clock"></i> Recent Activity</h5>
-            </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start-4 border-start-secondary shadow-sm h-100">
             <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-secondary text-uppercase mb-1">Total Donations</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">@ViewBag.TotalDonations</div>
+                        <small class="text-muted">Resources donated</small>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-gift fs-1 text-secondary opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start-4 border-start-success shadow-sm h-100">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-success text-uppercase mb-1">Completed Missions</div>
+                        <div class="h5 mb-0 fw-bold text-gray-800">@ViewBag.CompletedMissions</div>
+                        <small class="text-muted">Successful operations</small>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-check-circle fs-1 text-success opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start-4 border-start-info shadow-sm h-100">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <div class="text-xs fw-bold text-info text-uppercase mb-1">System Health</div>
+                        <div class="h5 mb-0 fw-bold text-success">Optimal</div>
+                        <small class="text-muted">All systems normal</small>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-heart-pulse fs-1 text-info opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Quick Actions -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white py-3">
+                <h5 class="mb-0"><i class="bi bi-lightning me-2"></i>Quick Actions</h5>
+            </div>
+            <div class="card-body p-0">
                 <div class="list-group list-group-flush">
-                    <div class="list-group-item">
-                        <small class="text-muted">Just now</small>
-                        <p class="mb-1">You logged into the admin panel</p>
-                    </div>
-                    <div class="list-group-item">
-                        <small class="text-muted">Today</small>
-                        <p class="mb-1">System is running normally</p>
-                    </div>
-                    <div class="list-group-item">
-                        <small class="text-muted">Welcome</small>
-                        <p class="mb-1">Admin dashboard initialized</p>
-                    </div>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" asp-action="Users">
+                        <div>
+                            <i class="bi bi-people text-primary me-3"></i>
+                            <span>Manage Users & Roles</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-muted"></i>
+                    </a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" asp-controller="Disasters" asp-action="Index">
+                        <div>
+                            <i class="bi bi-exclamation-triangle text-warning me-3"></i>
+                            <span>View All Disasters</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-muted"></i>
+                    </a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" asp-controller="Missions" asp-action="Index">
+                        <div>
+                            <i class="bi bi-compass text-info me-3"></i>
+                            <span>Manage Missions</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-muted"></i>
+                    </a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" asp-controller="Assignments" asp-action="Index">
+                        <div>
+                            <i class="bi bi-list-task text-success me-3"></i>
+                            <span>View Assignments</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-muted"></i>
+                    </a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" asp-controller="Volunteers" asp-action="Index">
+                        <div>
+                            <i class="bi bi-person-check text-success me-3"></i>
+                            <span>Manage Volunteers</span>
+                        </div>
+                        <i class="bi bi-chevron-right text-muted"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-dark text-white py-3">
+                <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Recent Activity</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    @if (ViewBag.RecentActivity != null)
+                    {
+                        foreach (var activity in ViewBag.RecentActivity)
+                        {
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">@activity.Title</h6>
+                                    <small class="text-muted">@activity.Time</small>
+                                </div>
+                                <p class="mb-1 text-muted small">@activity.Description</p>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="list-group-item text-center text-muted py-4">
+                            <i class="bi bi-inbox display-6 opacity-25 mb-2"></i>
+                            <p class="mb-0">No recent activity</p>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -131,34 +241,53 @@
 <!-- System Information -->
 <div class="row mt-4">
     <div class="col-12">
-        <div class="card">
-            <div class="card-header bg-secondary text-white">
-                <h5 class="mb-0"><i class="bi bi-info-circle"></i> System Information</h5>
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-gradient bg-light py-3">
+                <h5 class="mb-0 text-dark"><i class="bi bi-info-circle me-2"></i>System Information</h5>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <dl class="row">
-                            <dt class="col-sm-4">Application:</dt>
-                            <dd class="col-sm-8">Gift of the Givers Foundation</dd>
+                    <div class="col-md-4">
+                        <div class="border-end pe-3">
+                            <h6 class="text-primary mb-3">Application</h6>
+                            <dl class="row small">
+                                <dt class="col-sm-5">Name:</dt>
+                                <dd class="col-sm-7">Gift of the Givers</dd>
 
-                            <dt class="col-sm-4">Version:</dt>
-                            <dd class="col-sm-8">1.0.0</dd>
+                                <dt class="col-sm-5">Version:</dt>
+                                <dd class="col-sm-7">2.1.0</dd>
 
-                            <dt class="col-sm-4">Environment:</dt>
-                            <dd class="col-sm-8">Development</dd>
-                        </dl>
+                                <dt class="col-sm-5">Environment:</dt>
+                                <dd class="col-sm-7"><span class="badge bg-success">Production</span></dd>
+                            </dl>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <dl class="row">
-                            <dt class="col-sm-4">Database:</dt>
-                            <dd class="col-sm-8">Azure SQL</dd>
+                    <div class="col-md-4">
+                        <div class="border-end pe-3">
+                            <h6 class="text-primary mb-3">Technical</h6>
+                            <dl class="row small">
+                                <dt class="col-sm-5">Framework:</dt>
+                                <dd class="col-sm-7">ASP.NET Core 6.0</dd>
 
-                            <dt class="col-sm-4">Authentication:</dt>
-                            <dd class="col-sm-8">ASP.NET Core Identity</dd>
+                                <dt class="col-sm-5">Database:</dt>
+                                <dd class="col-sm-7">Azure SQL</dd>
 
-                            <dt class="col-sm-4">Admin User:</dt>
+                                <dt class="col-sm-5">Authentication:</dt>
+                                <dd class="col-sm-7">Identity</dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-primary mb-3">Session</h6>
+                        <dl class="row small">
+                            <dt class="col-sm-4">Admin:</dt>
                             <dd class="col-sm-8">@User.Identity.Name</dd>
+
+                            <dt class="col-sm-4">Login Time:</dt>
+                            <dd class="col-sm-8">@DateTime.Now.ToString("MMM dd, yyyy HH:mm")</dd>
+
+                            <dt class="col-sm-4">IP Address:</dt>
+                            <dd class="col-sm-8">@Context.Connection.RemoteIpAddress</dd>
                         </dl>
                     </div>
                 </div>

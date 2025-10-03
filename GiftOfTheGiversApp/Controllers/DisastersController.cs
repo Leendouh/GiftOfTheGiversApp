@@ -1,6 +1,7 @@
 ﻿using GiftOfTheGiversApp.Data;
 using GiftOfTheGiversApp.Models;
 using GiftOfTheGiversApp.Services;
+using GiftOfTheGiversApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

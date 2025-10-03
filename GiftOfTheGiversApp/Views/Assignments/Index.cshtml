@@ -1,0 +1,159 @@
+﻿@model IEnumerable<GiftOfTheGiversApp.Models.Assignment>
+@{
+    ViewData["Title"] = "All Assignments";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-people"></i> @ViewData["Title"]</h1>
+    <div>
+        <a class="btn btn-primary" asp-action="Create">
+            <i class="bi bi-person-plus"></i> New Assignment
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="bi bi-list-check"></i> Assignment Management</h5>
+    </div>
+    <div class="card-body">
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info">
+                <h5>No assignments found</h5>
+                <p>No volunteers have been assigned to disasters yet.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Volunteer</th>
+                            <th>Disaster</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Assignment Date</th>
+                            <th>Assigned By</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var assignment in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@assignment.Volunteer?.User?.FullName</strong>
+                                </td>
+                                <td>@assignment.Disaster?.Name</td>
+                                <td>
+                                    <span class="badge bg-info">@assignment.RoleInAssignment</span>
+                                </td>
+                                <td>
+                                    <span class="badge @GetStatusBadge(assignment.Status)">@assignment.Status</span>
+                                </td>
+                                <td>@assignment.AssignmentDate.ToString("MMM dd, yyyy")</td>
+                                <td>@assignment.AssignedBy?.FullName</td>
+                                <td>
+                                    <div class="btn-group dropstart">
+                                        <!-- Changed to dropstart -->
+                                        <!-- Status Dropdown -->
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
+                                                    data-bs-toggle="dropdown"
+                                                    data-bs-boundary="viewport"
+                                                    data-bs-offset="10,10"
+                                                    aria-expanded="false">
+                                                Status
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item" href="#"
+                                                       onclick="updateStatus(@assignment.Id, 'Assigned')">
+                                                        <i class="bi bi-person-check"></i> Assigned
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#"
+                                                       onclick="updateStatus(@assignment.Id, 'Completed')">
+                                                        <i class="bi bi-check-circle"></i> Completed
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#"
+                                                       onclick="updateStatus(@assignment.Id, 'Cancelled')">
+                                                        <i class="bi bi-x-circle"></i> Cancelled
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <!-- Edit Button -->
+                                        <a class="btn btn-outline-warning btn-sm" asp-action="Edit" asp-route-id="@assignment.Id">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function updateStatus(assignmentId, status) {
+            if (confirm('Are you sure you want to update this assignment status to "' + status + '"?')) {
+                // Create a form and submit it
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '@Url.Action("UpdateStatus", "Assignments")/' + assignmentId;
+
+                // Add anti-forgery token
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                const tokenInput = document.createElement('input');
+                tokenInput.type = 'hidden';
+                tokenInput.name = '__RequestVerificationToken';
+                tokenInput.value = token;
+                form.appendChild(tokenInput);
+
+                // Add status input
+                const statusInput = document.createElement('input');
+                statusInput.type = 'hidden';
+                statusInput.name = 'status';
+                statusInput.value = status;
+                form.appendChild(statusInput);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        // Initialize dropdowns with better positioning
+        document.addEventListener('DOMContentLoaded', function () {
+            var dropdowns = document.querySelectorAll('.dropdown');
+            dropdowns.forEach(function (dropdown) {
+                dropdown.addEventListener('show.bs.dropdown', function () {
+                    // Bootstrap will handle positioning with data-bs-boundary="viewport"
+                });
+            });
+        });
+    </script>
+}
+
+@functions {
+    public string GetStatusBadge(string status)
+    {
+        return status?.ToLower() switch
+        {
+            "assigned" => "bg-primary",
+            "completed" => "bg-success",
+            "cancelled" => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+}

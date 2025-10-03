@@ -4,47 +4,155 @@
     ViewData["Title"] = "Register";
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="card shadow border-0">
+            <div class="card-header bg-success text-white text-center py-4">
+                <h2 class="fw-bold mb-0">
+                    <i class="bi bi-person-plus me-2"></i>Join Our Mission
+                </h2>
+                <p class="mb-0 mt-2">Create your Gift of the Givers account</p>
+            </div>
+            <div class="card-body p-5">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-<div class="row">
-    <div class="col-md-6">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-4">
+                                        <input asp-for="Input.FirstName" class="form-control form-control-lg"
+                                               autocomplete="given-name" placeholder="First Name" />
+                                        <label asp-for="Input.FirstName" class="form-label text-muted">
+                                            <i class="bi bi-person me-2"></i>First Name
+                                        </label>
+                                        <span asp-validation-for="Input.FirstName" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-4">
+                                        <input asp-for="Input.LastName" class="form-control form-control-lg"
+                                               autocomplete="family-name" placeholder="Last Name" />
+                                        <label asp-for="Input.LastName" class="form-label text-muted">
+                                            <i class="bi bi-person me-2"></i>Last Name
+                                        </label>
+                                        <span asp-validation-for="Input.LastName" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
 
-            <!-- ADD THESE FIELDS -->
-            <div class="form-floating mb-3">
-                <input asp-for="Input.FirstName" class="form-control" autocomplete="given-name" />
-                <label asp-for="Input.FirstName"></label>
-                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.LastName" class="form-control" autocomplete="family-name" />
-                <label asp-for="Input.LastName"></label>
-                <span asp-validation-for="Input.LastName" class="text-danger"></span>
-            </div>
+                            <div class="form-floating mb-4">
+                                <input asp-for="Input.Email" class="form-control form-control-lg"
+                                       autocomplete="username" placeholder="name@example.com" />
+                                <label asp-for="Input.Email" class="form-label text-muted">
+                                    <i class="bi bi-envelope me-2"></i>Email Address
+                                </label>
+                                <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                            </div>
 
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" />
-                <label asp-for="Input.Email"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            <div class="form-floating mb-4">
+                                <input asp-for="Input.Password" class="form-control form-control-lg"
+                                       autocomplete="new-password" placeholder="password" />
+                                <label asp-for="Input.Password" class="form-label text-muted">
+                                    <i class="bi bi-lock me-2"></i>Password
+                                </label>
+                                <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                                <div class="form-text">
+                                    <small>Password must be at least 6 characters long</small>
+                                </div>
+                            </div>
+
+                            <div class="form-floating mb-4">
+                                <input asp-for="Input.ConfirmPassword" class="form-control form-control-lg"
+                                       autocomplete="new-password" placeholder="confirm password" />
+                                <label asp-for="Input.ConfirmPassword" class="form-label text-muted">
+                                    <i class="bi bi-lock-fill me-2"></i>Confirm Password
+                                </label>
+                                <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+                            </div>
+
+                            <div class="d-grid">
+                                <button id="registerSubmit" type="submit" class="btn btn-success btn-lg py-3">
+                                    <i class="bi bi-person-plus me-2"></i>Create Account
+                                </button>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <p class="text-muted mb-0">
+                                    Already have an account?
+                                    <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none fw-bold">
+                                        Sign in here
+                                    </a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-lg-4 mt-5 mt-lg-0">
+                        <div class="border-start-lg ps-lg-4">
+                            <div class="text-center mb-4">
+                                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                    <i class="bi bi-shield-check text-success fs-2"></i>
+                                </div>
+                            </div>
+                            <h6 class="text-center text-muted mb-3">Why Join Us?</h6>
+                            <div class="bg-light rounded p-3 mb-4">
+                                <h6 class="text-success mb-2">For Volunteers</h6>
+                                <p class="small text-muted mb-0">
+                                    Get assigned to missions, track your contributions, and make a real difference in disaster relief efforts.
+                                </p>
+                            </div>
+                            <div class="bg-light rounded p-3">
+                                <h6 class="text-primary mb-2">For Coordinators</h6>
+                                <p class="small text-muted mb-0">
+                                    Manage disaster response, coordinate volunteers, and organize relief missions efficiently.
+                                </p>
+                            </div>
+                            <div class="mt-4">
+                                <h6 class="text-muted small mb-2">What you can do:</h6>
+                                <ul class="list-unstyled small text-muted">
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle text-success me-2"></i>Report disasters
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle text-success me-2"></i>Join missions
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle text-success me-2"></i>Manage assignments
+                                    </li>
+                                    <li class="mb-0">
+                                        <i class="bi bi-check-circle text-success me-2"></i>Coordinate relief
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" />
-                <label asp-for="Input.Password"></label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" />
-                <label asp-for="Input.ConfirmPassword"></label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Real-time password validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('Input_Password');
+            const confirmInput = document.getElementById('Input_ConfirmPassword');
+
+            function validatePassword() {
+                if (passwordInput.value !== confirmInput.value) {
+                    confirmInput.setCustomValidity('Passwords do not match');
+                } else {
+                    confirmInput.setCustomValidity('');
+                }
+            }
+
+            passwordInput.addEventListener('input', validatePassword);
+            confirmInput.addEventListener('input', validatePassword);
+        });
+    </script>
 }

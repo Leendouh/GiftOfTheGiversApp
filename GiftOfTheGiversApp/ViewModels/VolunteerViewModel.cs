@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GiftOfTheGiversApp.Models
+namespace GiftOfTheGiversApp.ViewModels
 {
     public class VolunteerViewModel
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "Skills information is required")]
         [Display(Name = "Skills & Qualifications")]
         [DataType(DataType.MultilineText)]

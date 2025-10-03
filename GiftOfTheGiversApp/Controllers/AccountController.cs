@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using GiftOfTheGiversApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
+using GiftOfTheGiversApp.ViewModels;
 
 namespace GiftOfTheGiversApp.Controllers
 {

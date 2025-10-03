@@ -1,0 +1,75 @@
+﻿@model IEnumerable<GiftOfTheGiversApp.Models.Mission>
+@{
+    ViewData["Title"] = "My Missions";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-person-check"></i> My Missions</h1>
+    <div>
+        <a class="btn btn-outline-secondary" asp-action="Index">
+            <i class="bi bi-people"></i> All Missions
+        </a>
+        <a class="btn btn-outline-primary" asp-controller="Volunteers" asp-action="Index">
+            <i class="bi bi-person"></i> My Volunteer Profile
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0"><i class="bi bi-list-task"></i> Missions Assigned to Me</h5>
+    </div>
+    <div class="card-body">
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info">
+                <h5>No missions assigned</h5>
+                <p>You haven't been assigned to any missions yet. Check back later or contact a coordinator.</p>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                @foreach (var mission in Model)
+                {
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 border-success">
+                            <div class="card-header bg-success text-white">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">@mission.Title</h6>
+                                    <span class="badge bg-light text-dark">@mission.Status</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">@mission.Description</p>
+
+                                <div class="mb-2">
+                                    <small class="text-muted">
+                                        <i class="bi bi-exclamation-triangle"></i> <strong>Disaster:</strong> @mission.Disaster?.Name<br>
+                                        <i class="bi bi-geo-alt"></i> <strong>Location:</strong> @mission.Disaster?.Location<br>
+                                        <i class="bi bi-flag"></i> <strong>Priority:</strong> @mission.Priority
+                                    </small>
+                                </div>
+
+                                <div class="mb-2">
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar"></i> <strong>Created:</strong> @mission.CreatedDate.ToString("MMM dd, yyyy")<br>
+                                        @if (mission.DueDate.HasValue)
+                                        {
+                                            <i class="bi bi-hourglass-split"></i> <strong>Due:</strong> @mission.DueDate.Value.ToString("MMM dd, yyyy")
+                                        }
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a class="btn btn-sm btn-info w-100" asp-action="Details" asp-route-id="@mission.Id">
+                                    <i class="bi bi-eye"></i> View Mission Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

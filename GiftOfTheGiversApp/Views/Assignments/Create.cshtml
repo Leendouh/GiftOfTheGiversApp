@@ -1,0 +1,113 @@
+﻿@model GiftOfTheGiversApp.ViewModels.AssignmentViewModel
+
+@{
+    ViewData["Title"] = "Create Assignment";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-person-plus"></i> Assign Volunteer</h1>
+    <div>
+        <a class="btn btn-outline-secondary" asp-action="Index">
+            <i class="bi bi-arrow-left"></i> Back to Assignments
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Assign Volunteer to Disaster</h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="VolunteerId" class="form-label">Volunteer *</label>
+                                <select asp-for="VolunteerId" asp-items="Model.Volunteers" class="form-select">
+                                    <option value="">Select Volunteer</option>
+                                </select>
+                                <span asp-validation-for="VolunteerId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="DisasterId" class="form-label">Disaster *</label>
+                                <select asp-for="DisasterId" asp-items="Model.Disasters" class="form-select">
+                                    <option value="">Select Disaster</option>
+                                </select>
+                                <span asp-validation-for="DisasterId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="RoleInAssignment" class="form-label">Role *</label>
+                                <select asp-for="RoleInAssignment" asp-items="Model.Roles" class="form-select">
+                                    <option value="">Select Role</option>
+                                </select>
+                                <span asp-validation-for="RoleInAssignment" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Status" class="form-label">Status *</label>
+                                <select asp-for="Status" class="form-select">
+                                    <option value="Assigned">Assigned</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </select>
+                                <span asp-validation-for="Status" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="bi bi-check-circle"></i> Create Assignment
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0"><i class="bi bi-info-circle"></i> Assignment Information</h6>
+            </div>
+            <div class="card-body">
+                <p class="small">
+                    <strong>Volunteer Assignment:</strong> Assign volunteers to specific disasters with defined roles.
+                </p>
+                <p class="small">
+                    <strong>Role Types:</strong>
+                </p>
+                <ul class="small">
+                    <li><strong>Team Lead</strong> - Leads the volunteer team</li>
+                    <li><strong>Medical Staff</strong> - Provides medical assistance</li>
+                    <li><strong>Relief Distributor</strong> - Distributes relief supplies</li>
+                    <li><strong>Logistics Coordinator</strong> - Manages logistics</li>
+                    <li><strong>Damage Assessor</strong> - Assesses damage</li>
+                    <li><strong>Driver</strong> - Transportation support</li>
+                    <li><strong>General Volunteer</strong> - General assistance</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

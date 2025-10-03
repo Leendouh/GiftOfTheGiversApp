@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GiftOfTheGiversApp.Models
+namespace GiftOfTheGiversApp.ViewModels
 {
     public class RoleManagementViewModel
     {
@@ -14,6 +14,9 @@ namespace GiftOfTheGiversApp.Models
 
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; } // Add this property
 
         [Display(Name = "Current Roles")]
         public List<string> CurrentRoles { get; set; } = new List<string>();
@@ -30,6 +33,7 @@ namespace GiftOfTheGiversApp.Models
         public string UserId { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
+        public string PhoneNumber { get; set; } // Add this property
         public List<UserRole> Roles { get; set; } = new List<UserRole>();
     }
 

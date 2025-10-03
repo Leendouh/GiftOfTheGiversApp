@@ -13,33 +13,104 @@
     <div class="row mb-5">
         <div class="col-md-3">
             <div class="card text-white bg-danger mb-3">
-                <div class="card-body">
+                <div class="card-body text-center">
+                    <i class="bi bi-exclamation-triangle display-6 mb-2"></i>
                     <h5 class="card-title">Active Disasters</h5>
                     <h2 class="card-text">@ViewBag.DisasterCount</h2>
+                    <small>Requiring immediate response</small>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card text-white bg-success mb-3">
-                <div class="card-body">
+                <div class="card-body text-center">
+                    <i class="bi bi-people display-6 mb-2"></i>
                     <h5 class="card-title">Registered Volunteers</h5>
                     <h2 class="card-text">@ViewBag.VolunteerCount</h2>
+                    <small>Ready to help</small>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card text-white bg-warning mb-3">
-                <div class="card-body">
+                <div class="card-body text-center">
+                    <i class="bi bi-compass display-6 mb-2"></i>
                     <h5 class="card-title">Active Missions</h5>
                     <h2 class="card-text">@ViewBag.ActiveMissions</h2>
+                    <small>In progress</small>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card text-white bg-info mb-3">
+                <div class="card-body text-center">
+                    <i class="bi bi-heart display-6 mb-2"></i>
+                    <h5 class="card-title">Active Assignments</h5>
+                    <h2 class="card-text">@ViewBag.ActiveAssignments</h2>
+                    <small>Volunteers deployed</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Total Donations</h5>
-                    <h2 class="card-text">@ViewBag.TotalDonations</h2>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-grid gap-2">
+                                <a class="btn btn-outline-danger" asp-controller="Disasters" asp-action="Create">
+                                    <i class="bi bi-plus-circle"></i> Report New Disaster
+                                </a>
+                                <a class="btn btn-outline-success" asp-controller="Volunteers" asp-action="Create">
+                                    <i class="bi bi-person-plus"></i> Register as Volunteer
+                                </a>
+                                <a class="btn btn-outline-info" asp-controller="Donations" asp-action="Create">
+                                    <i class="bi bi-gift"></i> Make a Donation
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-grid gap-2">
+                                <a class="btn btn-outline-warning" asp-controller="Missions" asp-action="Index">
+                                    <i class="bi bi-compass"></i> View Missions
+                                </a>
+                                <a class="btn btn-outline-primary" asp-controller="Assignments" asp-action="Index">
+                                    <i class="bi bi-list-task"></i> Manage Assignments
+                                </a>
+                                @if (User.IsInRole("Admin") || User.IsInRole("Coordinator"))
+                                {
+                                    <a class="btn btn-outline-secondary" asp-controller="Missions" asp-action="Create">
+                                        <i class="bi bi-plus-circle"></i> Create New Mission
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">My Quick Links</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-outline-primary btn-sm" asp-controller="Missions" asp-action="Missions">
+                            <i class="bi bi-person-check"></i> My Missions
+                        </a>
+                        <a class="btn btn-outline-success btn-sm" asp-controller="Assignments" asp-action="Assignments">
+                            <i class="bi bi-list-check"></i> My Assignments
+                        </a>
+                        <a class="btn btn-outline-info btn-sm" asp-controller="Volunteers" asp-action="Index">
+                            <i class="bi bi-person-badge"></i> My Volunteer Profile
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -48,28 +119,50 @@
     <div class="row">
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header">
-                    <h5>Quick Actions</h5>
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Recent Activity</h5>
                 </div>
                 <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a class="btn btn-primary" asp-controller="Disasters" asp-action="Create">Report New Disaster</a>
-                        <a class="btn btn-success" asp-controller="Volunteers" asp-action="Create">Register as Volunteer</a>
-                        <a class="btn btn-info" asp-controller="Donations" asp-action="Create">Make a Donation</a>
-                        <a class="btn btn-warning" asp-controller="Missions" asp-action="Index">View Missions</a>
+                    @if (ViewBag.RecentMissions != null)
+                    {
+                        <h6>Latest Missions:</h6>
+                        <ul class="list-group list-group-flush">
+                            @foreach (var mission in ViewBag.RecentMissions)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>@mission.Title</span>
+                                    <span class="badge bg-primary">@mission.Status</span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No recent activity to display.</p>
+                    }
+                    <div class="text-center mt-3">
+                        <a class="btn btn-sm btn-outline-info" asp-controller="Missions" asp-action="Index">View All Missions</a>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header">
-                    <h5>About Our Mission</h5>
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">About Our Mission</h5>
                 </div>
                 <div class="card-body">
-                    <p>The Gift of the Givers Foundation is dedicated to providing swift and effective aid to communities affected by natural disasters and emergencies.</p>
-                    <p>Our platform helps coordinate volunteers, manage resources, and streamline disaster response efforts.</p>
-                    <p>Together, we can make a difference in the lives of those affected by adversity.</p>
+                    <p class="card-text">The Gift of the Givers Foundation is dedicated to providing swift and effective aid to communities affected by natural disasters and emergencies.</p>
+                    <p class="card-text">Our platform helps coordinate volunteers, manage resources, assign roles, and streamline disaster response efforts through organized missions and assignments.</p>
+                    <div class="alert alert-light mt-3">
+                        <h6><i class="bi bi-lightbulb"></i> How it works:</h6>
+                        <ol class="small mb-0">
+                            <li><strong>Report Disasters</strong> - Identify emergencies needing response</li>
+                            <li><strong>Create Missions</strong> - Plan specific relief operations</li>
+                            <li><strong>Assign Volunteers</strong> - Deploy the right people with the right roles</li>
+                            <li><strong>Coordinate Efforts</strong> - Track progress and manage resources</li>
+                        </ol>
+                    </div>
                 </div>
             </div>
         </div>
@@ -80,38 +173,67 @@ else
     <!-- CONTENT FOR GUESTS/NOT LOGGED IN -->
     <div class="row">
         <div class="col-md-8 mx-auto">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Join Our Relief Efforts</h4>
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h2 class="mb-0"><i class="bi bi-heart-fill"></i> Join Our Relief Efforts</h2>
+                    <p class="mb-0 mt-2">Be the difference in someone's life today</p>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     <div class="row text-center">
-                        <div class="col-md-4 mb-3">
-                            <div class="p-3 border rounded">
+                        <div class="col-md-4 mb-4">
+                            <div class="p-4 border rounded bg-light h-100">
+                                <i class="bi bi-exclamation-triangle text-danger display-6 mb-3"></i>
                                 <h5>🚨 Report Disasters</h5>
-                                <p>Help us respond faster by reporting emergencies in your area</p>
+                                <p class="mb-0">Help us respond faster by reporting emergencies in your area. Every second counts in disaster response.</p>
                             </div>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="p-3 border rounded">
+                        <div class="col-md-4 mb-4">
+                            <div class="p-4 border rounded bg-light h-100">
+                                <i class="bi bi-people text-success display-6 mb-3"></i>
                                 <h5>🤝 Volunteer</h5>
-                                <p>Join our team of dedicated volunteers making a difference</p>
+                                <p class="mb-0">Join our team of dedicated volunteers. Get assigned to missions where your skills are needed most.</p>
                             </div>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="p-3 border rounded">
-                                <h5>💰 Donate</h5>
-                                <p>Support our mission with much-needed resources and supplies</p>
+                        <div class="col-md-4 mb-4">
+                            <div class="p-4 border rounded bg-light h-100">
+                                <i class="bi bi-gift text-info display-6 mb-3"></i>
+                                <h5>💰 Donate Resources</h5>
+                                <p class="mb-0">Support our mission with much-needed resources, supplies, and equipment for disaster relief.</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="text-center mt-4">
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h6>For Volunteers</h6>
+                                    <p class="small">Register to get assigned to missions and help coordinate relief efforts</p>
+                                    <a class="btn btn-success btn-sm" asp-area="Identity" asp-page="/Account/Register">Join as Volunteer</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h6>For Coordinators</h6>
+                                    <p class="small">Manage disasters, create missions, and assign volunteers efficiently</p>
+                                    <a class="btn btn-primary btn-sm" asp-area="Identity" asp-page="/Account/Register">Register as Coordinator</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-5 pt-3 border-top">
                         <h5>Ready to make a difference?</h5>
-                        <p>Create an account to access all features and join our relief efforts</p>
+                        <p class="text-muted">Create an account to access all features and join our relief efforts</p>
                         <div class="d-grid gap-2 d-md-block">
-                            <a class="btn btn-primary me-md-2" asp-area="Identity" asp-page="/Account/Register">Sign Up</a>
-                            <a class="btn btn-outline-primary" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                            <a class="btn btn-primary btn-lg me-md-3 mb-2" asp-area="Identity" asp-page="/Account/Register">
+                                <i class="bi bi-person-plus"></i> Sign Up Now
+                            </a>
+                            <a class="btn btn-outline-primary btn-lg mb-2" asp-area="Identity" asp-page="/Account/Login">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </a>
                         </div>
                     </div>
                 </div>

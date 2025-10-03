@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GiftOfTheGiversApp.Models
+namespace GiftOfTheGiversApp.ViewModels
 {
     public class ReportViewModel
     {
