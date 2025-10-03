@@ -1,0 +1,38 @@
+name: Build Gift of the Givers App
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Test
+      run: dotnet test --verbosity normal --no-build
+
+    - name: Publish
+      run: dotnet publish -c Release -o ./publish --no-build
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: web-app
+        path: ./publish/
