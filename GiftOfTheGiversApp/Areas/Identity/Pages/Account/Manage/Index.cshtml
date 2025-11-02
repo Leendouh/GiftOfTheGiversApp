@@ -1,0 +1,103 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white py-3">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-person-gear me-3 fs-4"></i>
+                    <div>
+                        <h4 class="mb-0">@ViewData["Title"]</h4>
+                        <small class="opacity-75">Manage your account profile information</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body p-4">
+                <partial name="_StatusMessage" for="StatusMessage" />
+
+                <div class="row">
+                    <div class="col-md-8 mx-auto">
+                        <form id="profile-form" method="post" class="needs-validation" novalidate>
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                            <!-- Username Field -->
+                            <div class="mb-4">
+                                <label asp-for="Username" class="form-label fw-semibold text-dark">
+                                    <i class="bi bi-person-badge me-2 text-muted"></i>Username
+                                </label>
+                                <div class="input-group">
+                                    <input asp-for="Username" class="form-control form-control-lg" disabled />
+                                    <span class="input-group-text bg-light">
+                                        <i class="bi bi-lock text-muted"></i>
+                                    </span>
+                                </div>
+                                <small class="form-text text-muted">Username cannot be changed</small>
+                            </div>
+
+                            <!-- Phone Number Field -->
+                            <div class="mb-4">
+                                <label asp-for="Input.PhoneNumber" class="form-label fw-semibold text-dark">
+                                    <i class="bi bi-telephone me-2 text-muted"></i>Phone Number
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="bi bi-phone text-muted"></i>
+                                    </span>
+                                    <input asp-for="Input.PhoneNumber" class="form-control form-control-lg"
+                                           placeholder="Enter your phone number" />
+                                </div>
+                                <span asp-validation-for="Input.PhoneNumber" class="text-danger small"></span>
+                                <small class="form-text text-muted">We'll use this for important notifications</small>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-grid gap-3 mt-4">
+                                <button id="update-profile-button" type="submit"
+                                        class="btn btn-primary btn-lg py-2 fw-semibold">
+                                    <i class="bi bi-check-circle me-2"></i>Save Changes
+                                </button>
+
+                                <a href="~/" class="btn btn-outline-secondary btn-lg py-2">
+                                    <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer bg-light py-3">
+                <div class="text-center text-muted small">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Last updated: @DateTime.Now.ToString("MMM dd, yyyy")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Enhanced form validation
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('profile-form');
+
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+
+                form.classList.add('was-validated');
+            }, false);
+        });
+    </script>
+}

@@ -121,3 +121,7 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.Run();
+
+
+// Make Program accessible to integration tests
+public partial class Program { }
