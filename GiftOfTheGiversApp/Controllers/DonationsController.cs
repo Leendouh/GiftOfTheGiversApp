@@ -2,14 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using GiftOfTheGiversApp.Data;
 using GiftOfTheGiversApp.Models;
+using GiftOfTheGiversApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using GiftOfTheGiversApp.ViewModels;
 
 namespace GiftOfTheGiversApp.Controllers
 {
-    [Authorize]
     public class DonationsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,45 +18,48 @@ namespace GiftOfTheGiversApp.Controllers
             _context = context;
         }
 
-        // GET: Donations
+        // GET: Donations (Admin view - all donations)
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
-            var donations = await _context.Donations
-                .Include(d => d.Donor)
-                .Include(d => d.Resource)
-                    .ThenInclude(r => r.Category)
-                .OrderByDescending(d => d.DonationDate)
-                .ToListAsync();
-
+            var donations = await _context.Donations.ToListAsync();
             return View(donations);
         }
 
-        // GET: Donations/Donations
+        // GET: My Donations (User-specific view)
         public async Task<IActionResult> Donations()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var donations = await _context.Donations
-                .Include(d => d.Resource)
-                    .ThenInclude(r => r.Category)
                 .Where(d => d.DonorId == userId)
-                .OrderByDescending(d => d.DonationDate)
                 .ToListAsync();
-
             return View(donations);
         }
 
         // GET: Donations/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
             var donation = await _context.Donations
-                .Include(d => d.Donor)
-                .Include(d => d.Resource)
-                    .ThenInclude(r => r.Category)
-                .FirstOrDefaultAsync(d => d.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (donation == null) return NotFound();
+            if (donation == null)
+            {
+                return NotFound();
+            }
+
+            // Check if user is authorized to view this donation
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isAdmin = User.IsInRole("Admin");
+
+            if (!isAdmin && donation.DonorId != userId)
+            {
+                return Forbid();
+            }
 
             return View(donation);
         }
@@ -65,19 +67,15 @@ namespace GiftOfTheGiversApp.Controllers
         // GET: Donations/Create
         public async Task<IActionResult> Create()
         {
+            var resources = await _context.Resources.ToListAsync();
             var viewModel = new DonationCreateViewModel
             {
-                Resources = await _context.Resources
-                    .Include(r => r.Category)
-                    .Where(r => r.CurrentQuantity >= 0)
-                    .Select(r => new SelectListItem
-                    {
-                        Value = r.Id.ToString(),
-                        Text = $"{r.Name} - {r.Category.CategoryName} (Available: {r.CurrentQuantity})"
-                    })
-                    .ToListAsync()
+                Resources = resources.Select(r => new SelectListItem
+                {
+                    Value = r.Id.ToString(),
+                    Text = $"{r.Name} ({r.UnitOfMeasure})"
+                }).ToList()
             };
-
             return View(viewModel);
         }
 
@@ -88,105 +86,112 @@ namespace GiftOfTheGiversApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                // Create donation
+                var donation = new Donation
                 {
-                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    var user = await _context.Users.FindAsync(userId);
+                    DonorId = userId,
+                    ResourceId = viewModel.ResourceId,
+                    Quantity = viewModel.Quantity,
+                    Notes = viewModel.Notes,
+                    Status = "Pending",
+                    DonationDate = DateTime.Now
+                };
 
-                    // Convert ViewModel to Entity
-                    var donation = new Donation
-                    {
-                        DonorId = userId,
-                        ResourceId = viewModel.ResourceId,
-                        Quantity = viewModel.Quantity,
-                        Notes = viewModel.Notes,
-                        DonationDate = DateTime.Now,
-                        Status = "Pending"
-                    };
+                _context.Add(donation);
 
-                    // Update resource quantity
-                    var resource = await _context.Resources.FindAsync(donation.ResourceId);
-                    if (resource != null)
-                    {
-                        resource.CurrentQuantity += donation.Quantity;
-                    }
-
-                    _context.Add(donation);
-                    await _context.SaveChangesAsync();
-
-                    TempData["SuccessMessage"] = "Thank you for your donation! It will be reviewed and allocated to those in need.";
-                    return RedirectToAction(nameof(Donations));
-                }
-                catch (Exception ex)
+                // Update resource quantity
+                var resource = await _context.Resources.FindAsync(viewModel.ResourceId);
+                if (resource != null)
                 {
-                    ModelState.AddModelError("", "An error occurred while saving the donation: " + ex.Message);
+                    resource.CurrentQuantity += viewModel.Quantity;
+                    _context.Update(resource);
                 }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Donations));
             }
 
             // Reload resources if validation fails
-            viewModel.Resources = await _context.Resources
-                .Include(r => r.Category)
-                .Where(r => r.CurrentQuantity >= 0)
+            viewModel.Resources = (await _context.Resources.ToListAsync())
                 .Select(r => new SelectListItem
                 {
                     Value = r.Id.ToString(),
-                    Text = $"{r.Name} - {r.Category.CategoryName} (Available: {r.CurrentQuantity})"
-                })
-                .ToListAsync();
+                    Text = $"{r.Name} ({r.UnitOfMeasure})"
+                }).ToList();
 
             return View(viewModel);
         }
 
         // GET: Donations/Edit/5 (Admin only)
-        [Authorize(Roles = "Admin,Coordinator")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
             var donation = await _context.Donations
-                .Include(d => d.Resource)
-                .FirstOrDefaultAsync(d => d.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (donation == null) return NotFound();
+            if (donation == null)
+            {
+                return NotFound();
+            }
 
-            ViewBag.Resources = await _context.Resources.ToListAsync();
             return View(donation);
         }
 
         // POST: Donations/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Coordinator")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, Donation donation)
         {
-            if (id != donation.Id) return NotFound();
+            if (id != donation.Id)
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(donation);
-                    await _context.SaveChangesAsync();
+                    var existingDonation = await _context.Donations.FindAsync(id);
+                    if (existingDonation == null)
+                    {
+                        return NotFound();
+                    }
 
-                    TempData["SuccessMessage"] = "Donation updated successfully!";
+                    // Update only the fields that should be editable
+                    existingDonation.Quantity = donation.Quantity;
+                    existingDonation.Status = donation.Status;
+                    existingDonation.Notes = donation.Notes;
+
+                    _context.Update(existingDonation);
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!DonationExists(donation.Id))
+                    {
                         return NotFound();
+                    }
                     else
+                    {
                         throw;
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
-
-            ViewBag.Resources = await _context.Resources.ToListAsync();
             return View(donation);
         }
 
-        // POST: Donations/UpdateStatus
+        // POST: Donations/UpdateStatus/5
         [HttpPost]
-        [Authorize(Roles = "Admin,Coordinator")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateStatus(int id, string status)
         {
             var donation = await _context.Donations.FindAsync(id);
@@ -196,10 +201,10 @@ namespace GiftOfTheGiversApp.Controllers
             }
 
             donation.Status = status;
+            _context.Update(donation);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = $"Donation status updated to {status}";
-            return RedirectToAction(nameof(Index)); // Fixed this line
+            return RedirectToAction(nameof(Index));
         }
 
         private bool DonationExists(int id)
