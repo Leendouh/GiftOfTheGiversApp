@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GiftOfTheGiversApp.Integrat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GiftOfTheGiversApp.StressTests", "GiftOfTheGiversApp.StressTests\GiftOfTheGiversApp.StressTests.csproj", "{F59C1814-AD16-451A-8414-75DCA017FD14}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GiftOfTheGiversApp.UITests", "GiftOfTheGiversApp.UITests\GiftOfTheGiversApp.UITests.csproj", "{DE0019F8-35A0-487F-A791-2833E54902BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F59C1814-AD16-451A-8414-75DCA017FD14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F59C1814-AD16-451A-8414-75DCA017FD14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F59C1814-AD16-451A-8414-75DCA017FD14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE0019F8-35A0-487F-A791-2833E54902BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE0019F8-35A0-487F-A791-2833E54902BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE0019F8-35A0-487F-A791-2833E54902BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE0019F8-35A0-487F-A791-2833E54902BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
