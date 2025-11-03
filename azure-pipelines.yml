@@ -1,28 +1,55 @@
-name: Build and Test Gift of the Givers
+name: $(Date:yyyyMMdd)$(Rev:.r)
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+trigger:
+  branches:
+    include:
+    - main
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+variables:
+  buildConfiguration: 'Release'
 
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '6.0.x'
-        
-    - name: Restore dependencies
-      run: dotnet restore
-      
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-      
-    - name: Test
-      run: dotnet test --verbosity normal --no-build
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Install .NET 8 SDK'
+  inputs:
+    packageType: 'sdk'
+    version: '8.x'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Restore Packages'
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Application'
+  inputs:
+    command: 'build'
+    arguments: '--no-restore --configuration $(buildConfiguration)'
+    projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run Tests'
+  inputs:
+    command: 'test'
+    arguments: '--no-build --configuration $(buildConfiguration) --logger trx'
+    projects: '**/*Tests/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Application'
+  inputs:
+    command: 'publish'
+    arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    projects: '**/*.csproj'
+    zipAfterPublish: true
+
+- task: AzureWebApp@1
+  displayName: 'Deploy to Azure App Service'
+  inputs:
+    azureSubscription: 'GiftOfTheGivers-Azure-Connection'
+    appType: 'webApp'
+    appName: 'GiftOfTheGiversOrg'
+    package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
